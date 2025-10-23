@@ -28,17 +28,59 @@ function createGrid(squaresPerSide) {
         square.style.height = `${squareSize}px`;
 
         // Add the "hover" Event Listener to change color.
-        square.addEventListener('mouseover', changeColor);
+        square.addEventListener('mouseover', progressiveColoring);
 
         // Append the new square to the container.
         gridContainer.appendChild(square);
     }
 }
 
-function changeColor(e) {
+// Event listener function to apply a random color on the first.
+// pass and increase its opacity on subsequent passes.
+
+function progressiveColoring(e) {
     // e.target refers to the specific div that was hovered over.
-    
-    e.target.style.backgroundColor = '#510be8ff';
+    const square = e.target;
+
+    // Check if the base color is already stored on the element.
+    if (!square.dataset.rgb) {
+        // -- First Interaction --
+
+        // Generate random R, G, B, Values.
+        const r = Math.floor(Math.random() * 256);
+        const g = Math.floor(Math.random() * 256);
+        const b = Math.floor(Math.random() * 256);
+
+        // Store these base values in a data attribute.
+        // This lets us remember the color for future hovers.
+        square.dataset.rgb = `${r},${g},${b}`;
+
+        // Set the background color with 10% alpha (opacity).
+        square.style.backgroundColor = `rgba(${r},${g},${b}, 0.1)`;
+
+        // Store the current alpha (opacity) level.
+        square.dataset.alpha = 0.1;
+    } else {
+        // -- Subsequent Interactions --
+        // Get the current alpha level from the data attribute.
+        let currentAlpha = parseFloat(square.dataset.alpha);
+
+        // Only proceed if it's not yet fully opaque.
+        if (currentAlpha < 1) {
+            // Increase alpha by 0.1, and cap it at 1.
+            // Using Math.min here ti prevent it from going over 1.
+            let newAlpha = Math.min(1, currentAlpha + 0.1);
+
+            // Get the stored base color.
+            const baseColor = square.dataset.rgb;
+
+            // Set the new background color with the new alpha.
+            square.style.backgroundColor = `rgba(${baseColor}, ${newAlpha})`;
+
+            // Update the stored alpha value for the next hover.
+            square.dataset.alpha = newAlpha;
+        }
+    }
 }
 
 // Prompts the user for a new grid size and generates it.
@@ -51,15 +93,9 @@ function promptsForNewGrid() {
     let newSize = parseInt(userInput);
 
     // Validate the input.
-    if (isNaN(newSize)) {
-        // User entered something that's not a number.
-        alert("Invalid input. Please enter a number.");
-        return; // Stop the function.
-    }
-    
-    if (newSize < 1 || newSize > 100) {
-        // User entered a number outside the allowed range.
-        alert("Please enter a number between 1 and 100.");
+    if (isNaN(newSize) || newSize < 1 || newSize > 100) {
+        // User entered something that's not a number or not in between 1 and 100.
+        alert("Invalid input. Please enter a number between 1 and 100.");
         return; // Stop the function.
     }
 

@@ -1,0 +1,55 @@
+/* Basic body styling to center content */
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f0f0;
+}
+
+/* Style for button */
+
+#reset-button {
+    margin: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #ff4800;
+    color: #fffefe;
+    border: none;
+    border-radius: 5px;
+}
+
+#reset-button:hover {
+    background-color: #0056b3;
+}
+
+/* This is the main container.
+I use Flexbox with 'flex-wrap: wrap' to make the squares fill the space horizontally and then wrap to the next line. */
+
+#grid-container {
+    width: 960px;
+    height: 960px; /* Make it a square container. */
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row; /* This is default but good to be explicit. */
+    border: 2px solid #5b35cb;
+    background-color: #ffffff;
+}
+
+/* This class will be added to every div created by JavaScript.
+'box-sizing: border-box' is crucial! It ensures that the border
+is included in the total width/height, not added to it.
+This prevents the grid from breaking when we add borders.
+*/
+
+.grid-square {
+    /* Width and height will be set dynamically by JavaScript.
+     A light border to see the grid lines */
+    border: 1px solid #c4c4c4; 
+    
+    /* This is the magic property! */
+    box-sizing: border-box; 
+}
+
